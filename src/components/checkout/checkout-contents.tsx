@@ -1,11 +1,12 @@
 'use client';
 
 import { PriceSection } from '@/components/checkout/price-section';
-import { Environments, initializePaddle, Paddle } from '@paddle/paddle-js';
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import { CheckoutFormGradients } from '@/components/gradients/checkout-form-gradients';
+import { Environments, initializePaddle, Paddle } from '@paddle/paddle-js';
 import { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
+import debounce from 'debounce';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
 interface PathParams {
   priceId: string;
@@ -25,6 +26,13 @@ export function CheckoutContents({ userEmail }: Props) {
   const handleCheckoutEvents = (event: CheckoutEventsData) => {
     setCheckoutData(event);
   };
+
+  const debouncedUpdateItems = useCallback(
+    debounce((paddle: Paddle, priceId: string, quantity: number) => {
+      paddle.Checkout.updateItems([{ priceId, quantity }]);
+    }, 300),
+    [],
+  );
 
   useEffect(() => {
     if (!paddle?.Initialized && process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN && process.env.NEXT_PUBLIC_PADDLE_ENV) {
@@ -62,9 +70,9 @@ export function CheckoutContents({ userEmail }: Props) {
 
   useEffect(() => {
     if (paddle && priceId && paddle.Initialized) {
-      paddle.Checkout.updateItems([{ priceId: priceId, quantity: quantity }]);
+      debouncedUpdateItems(paddle, priceId, quantity);
     }
-  }, [paddle, priceId, quantity]);
+  }, [paddle, priceId, quantity, debouncedUpdateItems]);
 
   return (
     <div

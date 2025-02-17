@@ -4,7 +4,7 @@ import { PriceSection } from '@/components/checkout/price-section';
 import { CheckoutFormGradients } from '@/components/gradients/checkout-form-gradients';
 import { type Environments, initializePaddle, type Paddle } from '@paddle/paddle-js';
 import type { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
-import { throttle } from 'throttle-debounce';
+import throttle from 'lodash.throttle';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -28,9 +28,9 @@ export function CheckoutContents({ userEmail }: Props) {
   };
 
   const updateItems = useCallback(
-    throttle(1000, (paddle: Paddle, priceId: string, quantity: number) => {
+    throttle((paddle: Paddle, priceId: string, quantity: number) => {
       paddle.Checkout.updateItems([{ priceId, quantity }]);
-    }),
+    }, 1000),
     [],
   );
 

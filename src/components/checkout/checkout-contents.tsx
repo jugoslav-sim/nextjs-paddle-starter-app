@@ -2,9 +2,9 @@
 
 import { PriceSection } from '@/components/checkout/price-section';
 import { CheckoutFormGradients } from '@/components/gradients/checkout-form-gradients';
-import { Environments, initializePaddle, Paddle } from '@paddle/paddle-js';
-import { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
-import debounce from 'debounce';
+import { type Environments, initializePaddle, type Paddle } from '@paddle/paddle-js';
+import type { CheckoutEventsData } from '@paddle/paddle-js/types/checkout/events';
+import { throttle } from 'throttle-debounce';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -27,10 +27,10 @@ export function CheckoutContents({ userEmail }: Props) {
     setCheckoutData(event);
   };
 
-  const debouncedUpdateItems = useCallback(
-    debounce((paddle: Paddle, priceId: string, quantity: number) => {
+  const updateItems = useCallback(
+    throttle(1000, (paddle: Paddle, priceId: string, quantity: number) => {
       paddle.Checkout.updateItems([{ priceId, quantity }]);
-    }, 300),
+    }),
     [],
   );
 
@@ -70,9 +70,9 @@ export function CheckoutContents({ userEmail }: Props) {
 
   useEffect(() => {
     if (paddle && priceId && paddle.Initialized) {
-      debouncedUpdateItems(paddle, priceId, quantity);
+      updateItems(paddle, priceId, quantity);
     }
-  }, [paddle, priceId, quantity, debouncedUpdateItems]);
+  }, [paddle, priceId, quantity, updateItems]);
 
   return (
     <div

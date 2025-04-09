@@ -9,24 +9,22 @@ export async function POST(request: NextRequest) {
   const rawRequestBody = await request.text();
   const privateKey = process.env['PADDLE_NOTIFICATION_WEBHOOK_SECRET'] || '';
 
-  let status, eventName;
   try {
-    if (signature && rawRequestBody) {
-      const paddle = getPaddleInstance();
-      const eventData = await paddle.webhooks.unmarshal(rawRequestBody, privateKey, signature);
-      status = 200;
-      eventName = eventData?.eventType ?? 'Unknown event';
-      if (eventData) {
-        await webhookProcessor.processEvent(eventData);
-      }
-    } else {
-      status = 400;
-      console.log('Missing signature from header');
+    if (!signature || !rawRequestBody) {
+      return Response.json({ error: 'Missing signature from header' }, { status: 400 });
     }
+
+    const paddle = getPaddleInstance();
+    const eventData = await paddle.webhooks.unmarshal(rawRequestBody, privateKey, signature);
+    const eventName = eventData?.eventType ?? 'Unknown event';
+
+    if (eventData) {
+      await webhookProcessor.processEvent(eventData);
+    }
+
+    return Response.json({ status: 200, eventName });
   } catch (e) {
-    // Handle error
-    status = 500;
     console.log(e);
+    return Response.json({ error: 'Internal server error' }, { status: 500 });
   }
-  return Response.json({ status, eventName });
 }

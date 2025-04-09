@@ -23,38 +23,32 @@ export class ProcessWebhook {
   }
 
   private async updateSubscriptionData(eventData: SubscriptionCreatedEvent | SubscriptionUpdatedEvent) {
-    try {
-      const supabase = await createClient();
-      const response = await supabase
-        .from('subscriptions')
-        .upsert({
-          subscription_id: eventData.data.id,
-          subscription_status: eventData.data.status,
-          price_id: eventData.data.items[0].price?.id ?? '',
-          product_id: eventData.data.items[0].price?.productId ?? '',
-          scheduled_change: eventData.data.scheduledChange?.effectiveAt,
-          customer_id: eventData.data.customerId,
-        })
-        .select();
-      console.log(response);
-    } catch (e) {
-      console.error(e);
-    }
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from('subscriptions')
+      .upsert({
+        subscription_id: eventData.data.id,
+        subscription_status: eventData.data.status,
+        price_id: eventData.data.items[0].price?.id ?? '',
+        product_id: eventData.data.items[0].price?.productId ?? '',
+        scheduled_change: eventData.data.scheduledChange?.effectiveAt,
+        customer_id: eventData.data.customerId,
+      })
+      .select();
+
+    if (error) throw error;
   }
 
   private async updateCustomerData(eventData: CustomerCreatedEvent | CustomerUpdatedEvent) {
-    try {
-      const supabase = await createClient();
-      const response = await supabase
-        .from('customers')
-        .upsert({
-          customer_id: eventData.data.id,
-          email: eventData.data.email,
-        })
-        .select();
-      console.log(response);
-    } catch (e) {
-      console.error(e);
-    }
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from('customers')
+      .upsert({
+        customer_id: eventData.data.id,
+        email: eventData.data.email,
+      })
+      .select();
+
+    if (error) throw error;
   }
 }

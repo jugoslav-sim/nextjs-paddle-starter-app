@@ -41,32 +41,32 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "lodash.throttle": "^4.1.1",
-    "lucide-react": "^0.513.0",
+    "lucide-react": "^0.515.0",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "tailwind-merge": "^3.3.0",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@tailwindcss/postcss": "^4.1.7",
+    "@tailwindcss/postcss": "^4.1.10",
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^22.15.30",
-    "@types/react": "19.1.6",
+    "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@vercel/git-hooks": "^1.0.0",
-    "eslint": "^9.27.0",
+    "eslint": "^9.29.0",
     "eslint-config-next": "15.3.3",
-    "lint-staged": "^16.0.0",
-    "postcss": "^8.5.3",
+    "lint-staged": "^16.1.2",
+    "postcss": "^8.5.5",
     "prettier": "^3.5.3",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3"
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "19.1.6",
+      "@types/react": "19.1.8",
       "@types/react-dom": "19.1.6"
     }
   }

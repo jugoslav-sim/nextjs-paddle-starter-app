@@ -10,6 +10,7 @@ const PaymentMethodLabels: Record<PaddlePaymentMethodDetails['type'], string> = 
   paypal: 'PayPal',
   ideal: 'iDEAL',
   bancontact: 'Bancontact',
+  korea_local: 'Korean Local Payment',
   offline: 'Offline',
   unknown: 'Unknown',
 };

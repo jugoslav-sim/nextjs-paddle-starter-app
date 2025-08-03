@@ -1,7 +1,14 @@
 import Link from 'next/link';
-import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+
+interface User {
+  id: string;
+  email?: string;
+  user_metadata?: {
+    full_name?: string;
+  };
+}
 
 interface Props {
   user: User | null;

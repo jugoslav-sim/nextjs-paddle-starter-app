@@ -2,18 +2,17 @@
 
 import { Separator } from '@/components/ui/separator';
 import { LogOut } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
 import { MouseEvent } from 'react';
 import { useUserInfo } from '@/hooks/useUserInfo';
+import { useClerk } from '@clerk/nextjs';
 
 export function SidebarUserInfo() {
-  const supabase = createClient();
-  const { user } = useUserInfo(supabase);
+  const { user } = useUserInfo();
+  const { signOut } = useClerk();
 
   async function handleLogout(e: MouseEvent) {
     e.preventDefault();
-    await supabase.auth.signOut();
-    location.reload();
+    await signOut();
   }
 
   return (
